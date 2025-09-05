@@ -4,6 +4,15 @@ import path from 'path';
 import { query } from '../../../lib/db';
 
 // Configure multer for file uploads
+
+// Add this check at the beginning of your multer configuration
+if (process.env.NODE_ENV === 'production') {
+  // In production, don't save files locally
+  // You can implement cloud storage later
+  console.log('File upload disabled in production');
+} else {
+  // Your existing multer configuration for local development
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: function (req, file, cb) {
@@ -34,7 +43,7 @@ export const config = {
     bodyParser: false,
   },
 };
-
+}
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
